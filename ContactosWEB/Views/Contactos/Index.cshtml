@@ -1,0 +1,107 @@
+﻿@model IEnumerable<ContactosWEB.Models.Contacto>
+
+@{
+    ViewData["Title"] = "Contactos registrados";
+}
+
+<div class="alert alert-dark row align-content-center">
+    <div class="col-10 align-content-start">
+        <h6>@Model.Count() Contactos registrados</h6>
+    </div>
+    <div class="col-2 align-content-end">
+        <a asp-action="CrearContacto" class="btn btn-outline-primary">Nuevo contacto</a>
+    </div>
+</div>
+
+<div>
+    @if (TempData["NuevoContacto"] != null)
+    {
+        <p class="alert alert-success">@TempData["NuevoContacto"].ToString()</p>
+    }
+    @if (TempData["ContactoActualizado"] != null)
+    {
+        <p class="alert alert-primary">@TempData["ContactoActualizado"].ToString()</p>
+    }
+    @if (TempData["ContactoEliminado"] != null)
+    {
+        <p class="alert alert-danger">@TempData["ContactoEliminado"].ToString()</p>
+    }
+</div>
+<hr />
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-4 pt-5">
+            <div class="card">
+                <img src="@Url.Content(item.Foto)" class="card-img-top" height="350" />
+                <div class="card-body">
+                    <div class="card-title">
+                        <div class="row">
+                            <div class="col-9 align-content-start">
+                                <h5>@item.Nombre</h5>
+                            </div>
+                            <div class="col-3 badge badge-pill badge-secondary">
+                                <text class="align-middle">@item.TipoTelefono</text>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-text">
+                        <h6 class="badge badge-info">@item.Telefono</h6>
+                        <p class="badge badge-warning">@item.Email</p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a asp-action="ActualizarContacto" asp-route-contactoId="@item.ContactoId" class="btn btn-sm btn-outline-primary"><i class="far fa-edit"></i></a> |
+                    <a class="btn btn-sm btn-outline-danger" onclick="ConfirmarBorrado(@item.ContactoId, '@item.Nombre')"><i class="far fa-trash-alt"></i></a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+<div class="modal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Eliminar</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Seguro desea eliminar este contacto <text class="nombreContacto"></text></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary btnCancelar" data-bs-dismiss="modal">No</button>
+                <button type="button" class="btn btn-outline-danger btnBorrar" data-bs-dismiss="modal">Si</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script>
+        function ConfirmarBorrado(contactoId, nombreContacto) {
+            $(".nombreContacto").text(nombreContacto);
+            $(".modal").modal();
+            $(".btnBorrar").on('click', function () {
+                $.ajax({
+                    url: 'Contactos/EliminarContacto',
+                    method: 'POST',
+                    data: { contactoId: contactoId },
+                    success: function (data) {
+                        location.reload(true);
+                    }
+                });
+            });
+            $(".btnCancelar").on('click', function () {
+                contactoId = null;
+                nombreContacto = null;
+                $(".modal").modal('hide');
+            })
+        }
+    </script>
+}

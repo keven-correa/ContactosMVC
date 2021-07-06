@@ -1,0 +1,57 @@
+﻿@model ContactosWEB.Models.Contacto
+
+@{
+    ViewData["Title"] = "Actualizar contacto " + Model.Nombre;
+}
+
+
+<h4>Actualizar contacto @Model.Nombre</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="ActualizarContacto" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ContactoId" />
+            <div class="form-group">
+                <label asp-for="Nombre" class="control-label"></label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Telefono" class="control-label"></label>
+                <input asp-for="Telefono" class="form-control" id="telefono"/>
+                <span asp-validation-for="Telefono" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control"  />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TipoTelefono" class="control-label"></label>
+                <select asp-for="TipoTelefono" class="form-control" asp-items="Html.GetEnumSelectList<TipoTelefono>()"></select>
+                <span asp-validation-for="TipoTelefono" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Foto" class="control-label"></label>
+                <input asp-for="Foto" class="form-control" />
+                <span asp-validation-for="Foto" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Actualizar" class="btn btn-outline-primary" /> &emsp;
+                <a asp-action="Index">Volver</a>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts {
+<script>
+    $(document).ready(function () {
+        $("#telefono").mask("(999) 999-9999")
+    })
+</script>
+}
